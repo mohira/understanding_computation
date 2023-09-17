@@ -13,16 +13,17 @@ class ATest < Minitest::Test
     assert_equal [DoNothing.new, { x: Number.new(3) }], m.run
   end
 
-  def test_aaa
-    expression = Add.new(Variable.new(:x), Variable.new(:y))
-    env = { x: Number.new(3), y: Number.new(4) }
-
-    m = Machine.new(expression, env)
-
-    assert_equal Number.new(7), m.run
-  end
 
   class Archived
+    def test_aaa
+      expression = Add.new(Variable.new(:x), Variable.new(:y))
+      env = { x: Number.new(3), y: Number.new(4) }
+
+      m = Machine.new(expression, env)
+
+      assert_equal Number.new(7), m.run
+    end
+
     def test_add_multipy_expression
       # (1x2)+(3x4)
       expression = Add.new(
