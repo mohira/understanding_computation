@@ -3,6 +3,23 @@ require_relative 'a'
 
 class ATest < Minitest::Test
 
+
+  def test_if_statement_not_else
+    # if (x) { y = 1 }  | {x -> true}
+    # if (true) { y = 1 } | {x -> true}
+    # y = 1 | {x -> true}
+    # do-nothing | {x -> true, y->1}
+    expression = If.new(
+      Variable.new(:x),
+      Assign.new(:y, Number.new(1)),
+      DoNothing.new # ← ここがミソ！
+    )
+    env = { x: Boolean.new(true) }
+
+    m = Machine.new(expression, env)
+
+    assert_equal [DoNothing.new, { x: Boolean.new(true), y: Number.new(1) }], m.run
+  end
   def test_if_statement
     # if (x) { y = 1 } else { y=2 }    | {x -> true}
     # if (true) { y = 1 } else { y=2 } | {x -> true}
