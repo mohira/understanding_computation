@@ -3,6 +3,23 @@ require_relative 'a'
 
 class ATest < Minitest::Test
 
+  def test_if_statement
+    # if (x) { y = 1 } else { y=2 }    | {x -> true}
+    # if (true) { y = 1 } else { y=2 } | {x -> true}
+    # y = 1 | {x -> true}
+    # do-nothing | {x -> true, y->1}
+    expression = If.new(
+      Variable.new(:x),
+      Assign.new(:y, Number.new(1)),
+      Assign.new(:y, Number.new(2)),
+    )
+    env = { x: Boolean.new(true) }
+
+    m = Machine.new(expression, env)
+
+    assert_equal [DoNothing.new, { x: Boolean.new(true), y: Number.new(1) }], m.run
+  end
+
   def test_p34
     # x = x + 1 | { x->2 }
     expression = Assign.new(:x, Add.new(Variable.new(:x), Number.new(1)))
@@ -12,7 +29,6 @@ class ATest < Minitest::Test
 
     assert_equal [DoNothing.new, { x: Number.new(3) }], m.run
   end
-
 
   class Archived
     def test_aaa
