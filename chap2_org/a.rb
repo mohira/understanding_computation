@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Number < Struct.new(:value)
   def to_s
     value.to_s
@@ -115,7 +117,6 @@ class Variable < Struct.new(:name)
   def reduce(environment)
     environment[name]
   end
-
 end
 
 class DoNothing
@@ -218,7 +219,6 @@ class Sequence < Struct.new(:first, :second)
       [Sequence.new(reduced_first, second), new_environment]
     end
   end
-
 end
 
 class While < Struct.new(:condition, :body)
@@ -243,7 +243,6 @@ class While < Struct.new(:condition, :body)
 
     [If.new(condition, consequence, DoNothing.new), environment]
   end
-
 end
 
 class Machine < Struct.new(:statement, :environment)

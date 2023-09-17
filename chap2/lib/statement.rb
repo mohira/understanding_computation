@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 class DoNothing
   def to_s
-    "do-nothing"
+    'do-nothing'
   end
 
   def inspect
@@ -37,7 +38,6 @@ class Assign < Struct.new(:name, :expression)
       [DoNothing.new, environment.merge({ name => expression })]
     end
   end
-
 end
 
 class If < Struct.new(:condition, :consequence, :alternative)
@@ -112,21 +112,3 @@ class While < Struct.new(:condition, :body)
     [If.new(condition, consequence, DoNothing.new), environment]
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

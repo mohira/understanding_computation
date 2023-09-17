@@ -26,7 +26,6 @@ class Boolean < Struct.new(:value)
   def reducible?
     false
   end
-
 end
 
 class Add < Struct.new(:left, :right)
@@ -118,4 +117,3 @@ class Variable < Struct.new(:name, :value)
     environment[name]
   end
 end
-

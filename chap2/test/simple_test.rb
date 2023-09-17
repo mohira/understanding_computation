@@ -313,7 +313,7 @@ class SimpleTest < Minitest::Test
       end
     end
 
-    class WhileTest <Minitest::Test
+    class WhileTest < Minitest::Test
       def test_1
         # while (x < 5) { x = x * 3} | { x-> 1}
         # -----------------------------------------
@@ -352,5 +352,4 @@ class SimpleTest < Minitest::Test
       end
     end
   end
-
 end

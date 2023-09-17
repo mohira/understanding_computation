@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Machine < Struct.new(:statement, :environment)
   def step
     self.statement, self.environment = statement.reduce(environment)
@@ -14,5 +15,4 @@ class Machine < Struct.new(:statement, :environment)
 
     [statement, environment]
   end
-
 end

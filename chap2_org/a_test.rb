@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 require_relative 'a'
 
@@ -103,7 +105,7 @@ class ATest < Minitest::Test
     expression = If.new(
       Variable.new(:x),
       Assign.new(:y, Number.new(1)),
-      Assign.new(:y, Number.new(2)),
+      Assign.new(:y, Number.new(2))
     )
     env = { x: Boolean.new(true) }
 
@@ -136,7 +138,7 @@ class ATest < Minitest::Test
       # (1x2)+(3x4)
       expression = Add.new(
         Multiply.new(Number.new(1), Number.new(2)),
-        Multiply.new(Number.new(3), Number.new(4)),
+        Multiply.new(Number.new(3), Number.new(4))
       )
 
       assert expression.reducible?
@@ -155,7 +157,7 @@ class ATest < Minitest::Test
     def test_machine
       expression = Add.new(
         Multiply.new(Number.new(1), Number.new(2)),
-        Multiply.new(Number.new(3), Number.new(4)),
+        Multiply.new(Number.new(3), Number.new(4))
       )
 
       machine = Machine.new(expression)
@@ -167,11 +169,10 @@ class ATest < Minitest::Test
       # 1+2 < 3*4 -> true
       expression = LessThan.new(
         Add.new(Number.new(1), Number.new(2)),
-        Multiply.new(Number.new(3), Number.new(4)),
+        Multiply.new(Number.new(3), Number.new(4))
       )
 
       assert_equal Boolean.new(true), Machine.new(expression).run
     end
   end
-
 end
