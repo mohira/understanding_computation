@@ -118,9 +118,27 @@ class Variable < Struct.new(:name)
 
 end
 
-# MEMO: irbならこういうやり方があるよ
-# Object.send(:remove_const, :Machine) # 古い Machine クラスのことを忘れるため
+class DoNothing
+  # 何もしない Statement
 
+  def to_s
+    'do-nothing'
+  end
+
+  def inspect
+    "«#{self}»"
+  end
+
+
+  def ==(other)
+    # Structを継承してないから必要だね！
+    other.is_a?(DoNothing)
+  end
+
+  def reducible?
+    false
+  end
+end
 
 class Machine < Struct.new(:expression, :environment)
   def step
