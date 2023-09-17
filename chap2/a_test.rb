@@ -2,6 +2,24 @@ require 'minitest/autorun'
 require_relative 'a'
 
 class ATest < Minitest::Test
+  def test_sequence_in_seq
+    # 3つの文を持つやつを試す
+    # Seq(x=1+1, Sew(y=x+3, z=y+5))
+    # x = 1+1   ; y=x+3 ; z=y+5| {}
+    # ↓
+    # do-nothing | { x->2, y->5, z->10}
+    statement1 = Assign.new(:x, Add.new(Number.new(1), Number.new(1))) # x=1+1
+    statement2 = Assign.new(:y, Add.new(Variable.new(:x), Number.new(3))) # y=x+3
+    statement3 = Assign.new(:z, Add.new(Variable.new(:y), Number.new(5))) # z=y+5
+
+    expression = Sequence.new(statement1, Sequence.new(statement2, statement3))
+    env = {}
+
+    m = Machine.new(expression, env)
+
+    assert_equal [DoNothing.new, { x: Number.new(2), y: Number.new(5), z: Number.new(10) }], m.run
+  end
+
   def test_sequence
     # x = 1+1   ; y=x+3 | {}
     # x = 2     ; y=x+3 | {}
