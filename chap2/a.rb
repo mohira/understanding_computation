@@ -129,7 +129,6 @@ class DoNothing
     "«#{self}»"
   end
 
-
   def ==(other)
     # Structを継承してないから必要だね！
     other.is_a?(DoNothing)
@@ -137,6 +136,33 @@ class DoNothing
 
   def reducible?
     false
+  end
+end
+
+class Assign < Struct.new(:name, :expression)
+  def to_s
+    "#{name} = #{expression}"
+  end
+
+  def inspect
+    "«#{self}»"
+  end
+
+  def reducible?
+    true
+  end
+
+  # x = 1 + 2  | {}
+  # x = 3      | {}
+  # do-nothing | {[x->3]}
+  #
+  # MEMO: envも含めたArrayを返すのが今までのExpressionと違うところだね
+  def reduce(environment)
+    if expression.reducible?
+      [Assign.new(name, expression.reduce(environment)), environment]
+    else
+      [DoNothing.new, environment.merge({ name => expression })]
+    end
   end
 end
 
