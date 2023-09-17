@@ -1,6 +1,4 @@
 class Number < Struct.new(:value)
-  # attr_reader :value
-
   def to_s
     value.to_s
   end
