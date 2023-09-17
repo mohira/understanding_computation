@@ -195,7 +195,6 @@ class If < Struct.new(:condition, :consequence, :alternative)
   end
 end
 
-
 class Sequence < Struct.new(:first, :second)
   def to_s
     "#{first}; #{second}"
@@ -222,6 +221,30 @@ class Sequence < Struct.new(:first, :second)
 
 end
 
+class While < Struct.new(:condition, :body)
+  def to_s
+    "while (#{condition}) { #{body} }"
+  end
+
+  def inspect
+    "«#{self}»"
+  end
+
+  def reducible?
+    true
+  end
+
+  def reduce(environment)
+    # consequenceが肝なので、変数に抽出しています
+    consequence = Sequence.new(
+      body,
+      While.new(condition, body) # selfでもいいけど、Whileのほうが規則がわかりやすいじゃん？
+    )
+
+    [If.new(condition, consequence, DoNothing.new), environment]
+  end
+
+end
 
 class Machine < Struct.new(:statement, :environment)
   def step
