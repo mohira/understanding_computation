@@ -40,16 +40,6 @@ class Multiply < Struct.new(:left, :right)
   end
 end
 
-def reducible?(expression)
-  case expression
-  when Number
-    false # 簡約できません
-  when Add, Multiply
-    true
-  else
-    raise StandardError, 'ココに来るのはおかしいぜ？'
-  end
-end
 
 def main
 
