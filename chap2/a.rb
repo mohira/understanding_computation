@@ -168,7 +168,7 @@ end
 
 class Machine < Struct.new(:statement, :environment)
   def step
-    self.statement, self.environment = statement, reduce(environment)
+    self.statement, self.environment = statement.reduce(environment)
   end
 
   def run
@@ -180,6 +180,6 @@ class Machine < Struct.new(:statement, :environment)
     puts "#{statement} | #{environment}"
 
     # テストのために強引に値を返すよ〜〜
-    [statement, expression]
+    [statement, environment]
   end
 end

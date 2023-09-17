@@ -2,6 +2,17 @@ require 'minitest/autorun'
 require_relative 'a'
 
 class ATest < Minitest::Test
+
+  def test_p34
+    # x = x + 1 | { x->2 }
+    expression = Assign.new(:x, Add.new(Variable.new(:x), Number.new(1)))
+    env = { x: Number.new(2) }
+
+    m = Machine.new(expression, env)
+
+    assert_equal [DoNothing.new, { x: Number.new(3) }], m.run
+  end
+
   def test_aaa
     expression = Add.new(Variable.new(:x), Variable.new(:y))
     env = { x: Number.new(3), y: Number.new(4) }
