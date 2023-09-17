@@ -2,7 +2,24 @@ require 'minitest/autorun'
 require_relative 'a'
 
 class ATest < Minitest::Test
+  def test_sequence
+    # x = 1+1   ; y=x+3 | {}
+    # x = 2     ; y=x+3 | {}
+    # do-nothing; y=x+3 | { x->2}
+    # y=x+3 | { x->2 }
+    # y=2+3 | { x->2 }
+    # y=5   | { x->2 }
+    # do-nothing | { x->2, y->5 }
+    expression = Sequence.new(
+      Assign.new(:x, Add.new(Number.new(1), Number.new(1))), # x=1+1
+      Assign.new(:y, Add.new(Variable.new(:x), Number.new(3))) # y=x+3
+    )
+    env = {}
 
+    m = Machine.new(expression, env)
+
+    assert_equal [DoNothing.new, { x: Number.new(2), y: Number.new(5) }], m.run
+  end
 
   def test_if_statement_not_else
     # if (x) { y = 1 }  | {x -> true}
@@ -20,6 +37,7 @@ class ATest < Minitest::Test
 
     assert_equal [DoNothing.new, { x: Boolean.new(true), y: Number.new(1) }], m.run
   end
+
   def test_if_statement
     # if (x) { y = 1 } else { y=2 }    | {x -> true}
     # if (true) { y = 1 } else { y=2 } | {x -> true}
