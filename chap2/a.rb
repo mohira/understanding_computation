@@ -61,13 +61,20 @@ class Multiply < Struct.new(:left, :right)
   end
 end
 
-def main
+class Machine < Struct.new(:expression)
+  def step
+    self.expression = expression.reduce
+  end
 
-  ast1 = Add.new(
-    Multiply.new(Number.new(1), Number.new(2)),
-    Multiply.new(Number.new(3), Number.new(4)),
-  )
+  def run
+    while expression.reducible?
+      puts expression
+      step
+    end
 
-  p ast1
-  p Number.new(5)
+    puts expression
+
+    # テストのために強引に値を返すよ〜〜
+    expression
+  end
 end

@@ -21,4 +21,15 @@ class ATest < Minitest::Test
 
     refute expression.reduce.reduce.reduce.reducible?
   end
+
+  def test_machine
+    expression = Add.new(
+      Multiply.new(Number.new(1), Number.new(2)),
+      Multiply.new(Number.new(3), Number.new(4)),
+    )
+
+    machine = Machine.new(expression)
+
+    assert_equal Number.new(14), machine.run
+  end
 end
