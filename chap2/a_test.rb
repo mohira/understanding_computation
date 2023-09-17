@@ -10,9 +10,15 @@ class ATest < Minitest::Test
     )
 
     assert expression.reducible?
-    assert_equal Add.new(Number.new(2), Multiply.new(Number.new(3), Number.new(4))), expression.reduce
-    assert_equal Add.new(Number.new(2), Number.new(12)), expression.reduce.reduce
-    assert_equal Number.new(14), expression.reduce.reduce.reduce
+    r1 = Add.new(Number.new(2), Multiply.new(Number.new(3), Number.new(4)))
+    assert_equal r1, expression.reduce
+
+    r2 = Add.new(Number.new(2), Number.new(12))
+    assert_equal r2, expression.reduce.reduce
+
+    r3 = Number.new(14)
+    assert_equal r3, expression.reduce.reduce.reduce
+
     refute expression.reduce.reduce.reduce.reducible?
   end
 end
