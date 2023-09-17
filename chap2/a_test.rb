@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require_relative 'a'
 
 class ATest < Minitest::Test
-  def test_a
+  def test_add_multipy_expression
     # (1x2)+(3x4)
     expression = Add.new(
       Multiply.new(Number.new(1), Number.new(2)),
@@ -31,5 +31,15 @@ class ATest < Minitest::Test
     machine = Machine.new(expression)
 
     assert_equal Number.new(14), machine.run
+  end
+
+  def test_less_than_to_boolean
+    # 1+2 < 3*4 -> true
+    expression = LessThan.new(
+      Add.new(Number.new(1), Number.new(2)),
+      Multiply.new(Number.new(3), Number.new(4)),
+    )
+
+    assert_equal Boolean.new(true), Machine.new(expression).run
   end
 end
