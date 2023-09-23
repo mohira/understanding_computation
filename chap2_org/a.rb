@@ -359,7 +359,7 @@ class While < Struct.new(:condition, :body)
   def to_ruby
     # 1行で、RubyのWhileの構文を描いているので、セミコロンが必要
     # 最後の e は 環境を返している(Statementは環境を返すぞ！)
-    "-> e { while #{condition.to_ruby}.call(e)); e = #{body.to_ruby}.call(e);  end; e}"
+    "-> e { while (#{condition.to_ruby}).call(e); e = (#{body.to_ruby}).call(e);  end; e}"
   end
 
 end
