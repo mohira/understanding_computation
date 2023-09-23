@@ -307,17 +307,13 @@ class Sequence < Struct.new(:first, :second)
   end
 
   def evaluate(environment)
-    new_env = first.evaluate(environment)
-
-    second.evaluate(new_env)
+    second.evaluate(first.evaluate(environment))
   end
 
   def to_ruby
     # "-> e {  (#{second.to_ruby}).call(new_env)                    }"
     "-> e {  (#{second.to_ruby}).call(  (#{first.to_ruby}).call(e)  ) }"
-
   end
-
 end
 
 class While < Struct.new(:condition, :body)
