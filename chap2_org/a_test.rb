@@ -124,7 +124,7 @@ class ATest < Minitest::Test
     assert_equal [DoNothing.new, { x: Number.new(3) }], m.run
   end
 
-  class Archived
+  class Archive
     def test_aaa
       expression = Add.new(Variable.new(:x), Variable.new(:y))
       env = { x: Number.new(3), y: Number.new(4) }

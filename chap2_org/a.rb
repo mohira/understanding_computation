@@ -192,6 +192,10 @@ class DoNothing
   def evaluate(environment)
     environment
   end
+
+  def to_ruby
+    '-> e { e }'
+  end
 end
 
 class Assign < Struct.new(:name, :expression)
@@ -223,6 +227,13 @@ class Assign < Struct.new(:name, :expression)
   def evaluate(environment)
     environment.merge({ name => expression.evaluate(environment) })
   end
+
+  def to_ruby
+    # "-> e { e.merge(name=>val)  }"
+    # "-> e { e.merge(#{name.inspect}=> #{expression.inspect})  }" # だめ
+    "-> e { e.merge(#{name.inspect} => (#{expression.to_ruby}).call(e)) }" # これでもよさそう
+  end
+
 end
 
 class If < Struct.new(:condition, :consequence, :alternative)
@@ -261,6 +272,14 @@ class If < Struct.new(:condition, :consequence, :alternative)
       alternative.evaluate(environment)
     end
   end
+
+  def to_ruby
+    "-> e { if (#{condition.to_ruby}).call(e) " +
+      "then (#{consequence.to_ruby}).call(e)" +
+      "else (#{alternative.to_ruby}).call(e)" +
+      "end }"
+  end
+
 end
 
 class Sequence < Struct.new(:first, :second)
@@ -291,6 +310,12 @@ class Sequence < Struct.new(:first, :second)
     new_env = first.evaluate(environment)
 
     second.evaluate(new_env)
+  end
+
+  def to_ruby
+    # "-> e {  (#{second.to_ruby}).call(new_env)                    }"
+    "-> e {  (#{second.to_ruby}).call(  (#{first.to_ruby}).call(e)  ) }"
+
   end
 
 end
@@ -331,6 +356,12 @@ class While < Struct.new(:condition, :body)
     end
   end
 
+  def to_ruby
+    # 1行で、RubyのWhileの構文を描いているので、セミコロンが必要
+    # 最後の e は 環境を返している(Statementは環境を返すぞ！)
+    "-> e { while #{condition.to_ruby}.call(e)); e = #{body.to_ruby}.call(e);  end; e}"
+  end
+
 end
 
 class Machine < Struct.new(:statement, :environment)
@@ -350,3 +381,17 @@ class Machine < Struct.new(:statement, :environment)
     [statement, environment]
   end
 end
+
+# while (x < 5) { x = x * 3}
+
+statement =
+    While.new(
+      LessThan.new(Variable.new(:x), Number.new(5)),
+      Assign.new(:x, Multiply.new(Variable.new(:x), Number.new(3)))
+    )
+
+p statement
+
+p statement.to_ruby
+
+p eval(statement.to_ruby).call({x:1})
