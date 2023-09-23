@@ -163,6 +163,10 @@ class DoNothing
   def reducible?
     false
   end
+
+  def evaluate(environment)
+    environment
+  end
 end
 
 class Assign < Struct.new(:name, :expression)
@@ -189,6 +193,10 @@ class Assign < Struct.new(:name, :expression)
     else
       [DoNothing.new, environment.merge({ name => expression })]
     end
+  end
+
+  def evaluate(environment)
+    environment.merge({ name => expression.evaluate(environment) })
   end
 end
 
@@ -219,6 +227,15 @@ class If < Struct.new(:condition, :consequence, :alternative)
       end
     end
   end
+
+  def evaluate(environment)
+    case condition.evaluate(environment)
+    when Boolean.new(true)
+      consequence.evaluate(environment)
+    when Boolean.new(false)
+      alternative.evaluate(environment)
+    end
+  end
 end
 
 class Sequence < Struct.new(:first, :second)
@@ -244,6 +261,13 @@ class Sequence < Struct.new(:first, :second)
       [Sequence.new(reduced_first, second), new_environment]
     end
   end
+
+  def evaluate(environment)
+    new_env = first.evaluate(environment)
+
+    second.evaluate(new_env)
+  end
+
 end
 
 class While < Struct.new(:condition, :body)
@@ -268,6 +292,20 @@ class While < Struct.new(:condition, :body)
 
     [If.new(condition, consequence, DoNothing.new), environment]
   end
+
+  def evaluate(environment)
+    case condition.evaluate(environment)
+    when Boolean.new(true)
+      new_env = body.evaluate(environment)
+
+      # self. になっている方が、しっくりくるのでこうしてます！
+      # 別ファイルの関数がcallされている気がしちゃうのよ。evaluateだけだとね！
+      self.evaluate(new_env)
+    when Boolean.new(false)
+      environment
+    end
+  end
+
 end
 
 class Machine < Struct.new(:statement, :environment)
@@ -287,3 +325,35 @@ class Machine < Struct.new(:statement, :environment)
     [statement, environment]
   end
 end
+
+statement =
+  Sequence.new(
+    Assign.new(:x, Add.new(Number.new(1), Number.new(1))),
+    Assign.new(:y, Add.new(Variable.new(:x), Number.new(3)))
+  )
+
+p statement
+p statement.evaluate({})
+
+# while (x <5) { x=x * 3} | {x=1}
+statement =
+  While.new(
+    LessThan.new(Variable.new(:x), Number.new(5)),
+    Assign.new(:x, Multiply.new(Variable.new(:x), Number.new(3)))
+  )
+p statement
+env = {x: Number.new(1)}
+
+p statement.evaluate(env)
+
+
+
+
+
+
+
+
+
+
+
+
