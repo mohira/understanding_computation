@@ -12,6 +12,10 @@ class Number < Struct.new(:value)
   def reducible?
     false
   end
+
+  def evaluate(environment)
+    self
+  end
 end
 
 class Add < Struct.new(:left, :right)
@@ -37,6 +41,10 @@ class Add < Struct.new(:left, :right)
       Number.new(left.value + right.value)
     end
   end
+
+  def evaluate(environment)
+    Number.new(left.evaluate(environment).value + right.evaluate(environment).value)
+  end
 end
 
 class Multiply < Struct.new(:left, :right)
@@ -61,6 +69,10 @@ class Multiply < Struct.new(:left, :right)
       Number.new(left.value * right.value)
     end
   end
+
+  def evaluate(environment)
+    Number.new(left.evaluate(environment).value * right.evaluate(environment).value)
+  end
 end
 
 class Boolean < Struct.new(:value)
@@ -74,6 +86,10 @@ class Boolean < Struct.new(:value)
 
   def reducible?
     false
+  end
+
+  def evaluate(environment)
+    self
   end
 end
 
@@ -99,6 +115,10 @@ class LessThan < Struct.new(:left, :right)
       Boolean.new(left.value < right.value)
     end
   end
+
+  def evaluate(environment)
+    Boolean.new(left.evaluate(environment).value < right.evaluate(environment).value)
+  end
 end
 
 class Variable < Struct.new(:name)
@@ -117,6 +137,11 @@ class Variable < Struct.new(:name)
   def reduce(environment)
     environment[name]
   end
+
+  def evaluate(environment)
+    environment[name]
+  end
+
 end
 
 class DoNothing
