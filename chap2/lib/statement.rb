@@ -111,4 +111,17 @@ class While < Struct.new(:condition, :body)
 
     [If.new(condition, consequence, DoNothing.new), environment]
   end
+
+  def evaluate(environment)
+    # 条件を評価する
+    case condition.evaluate(environment)
+    when Boolean.new(true)
+      new_env = body.evaluate(environment)
+      While.new(condition, body).evaluate(new_env)
+    when Boolean.new(false)
+      environment
+    end
+
+  end
+
 end
