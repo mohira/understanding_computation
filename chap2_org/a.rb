@@ -342,11 +342,7 @@ class While < Struct.new(:condition, :body)
   def evaluate(environment)
     case condition.evaluate(environment)
     when Boolean.new(true)
-      new_env = body.evaluate(environment)
-
-      # self. になっている方が、しっくりくるのでこうしてます！
-      # 別ファイルの関数がcallされている気がしちゃうのよ。evaluateだけだとね！
-      self.evaluate(new_env)
+      self.evaluate(body.evaluate(environment)) # self. になっている方が、しっくりくるのでこうしてます！ 別ファイルの関数がcallされている気がしちゃうのよ。evaluateだけだとね！
     when Boolean.new(false)
       environment
     end
