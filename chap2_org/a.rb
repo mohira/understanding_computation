@@ -16,6 +16,11 @@ class Number < Struct.new(:value)
   def evaluate(environment)
     self
   end
+
+  def to_ruby
+    "-> e { #{value.inspect} }"
+  end
+
 end
 
 class Add < Struct.new(:left, :right)
@@ -90,6 +95,10 @@ class Boolean < Struct.new(:value)
 
   def evaluate(environment)
     self
+  end
+
+  def to_ruby
+    "-> e { #{value.inspect} }"
   end
 end
 
