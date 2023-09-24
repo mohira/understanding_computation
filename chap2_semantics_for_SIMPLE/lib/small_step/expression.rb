@@ -1,42 +1,20 @@
 # frozen_string_literal: true
 
-class Number < Struct.new(:value)
-  def to_s
-    value.to_s
-  end
+require_relative '../ast/expression'
 
-  def inspect
-    "«#{self}»"
-  end
-
+class Number < AST::Expression::Number
   def reducible?
     false
   end
 end
 
-class Boolean < Struct.new(:value)
-  def to_s
-    value.to_s
-  end
-
-  def inspect
-    "«#{self}»"
-  end
-
+class Boolean < AST::Expression::Boolean
   def reducible?
     false
   end
 end
 
-class Add < Struct.new(:left, :right)
-  def to_s
-    "#{left} + #{right}"
-  end
-
-  def inspect
-    "«#{self}»"
-  end
-
+class Add < AST::Expression::Add
   def reducible?
     true
   end
@@ -52,15 +30,7 @@ class Add < Struct.new(:left, :right)
   end
 end
 
-class Multiply < Struct.new(:left, :right)
-  def to_s
-    "#{left} * #{right}"
-  end
-
-  def inspect
-    "«#{self}»"
-  end
-
+class Multiply < AST::Expression::Multiply
   def reducible?
     true
   end
@@ -76,15 +46,7 @@ class Multiply < Struct.new(:left, :right)
   end
 end
 
-class LessThan < Struct.new(:left, :right)
-  def to_s
-    "#{left} < #{right}"
-  end
-
-  def inspect
-    "«#{self}»"
-  end
-
+class LessThan < AST::Expression::LessThan
   def reducible?
     true
   end
@@ -100,15 +62,7 @@ class LessThan < Struct.new(:left, :right)
   end
 end
 
-class Variable < Struct.new(:name, :value)
-  def to_s
-    name.to_s
-  end
-
-  def inspect
-    "«#{self}»"
-  end
-
+class Variable < AST::Expression::Variable
   def reducible?
     true
   end

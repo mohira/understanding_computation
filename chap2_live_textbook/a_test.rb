@@ -134,7 +134,7 @@ class ATest < Minitest::Test
       assert_equal Number.new(7), m.run
     end
 
-    def test_add_multipy_expression
+    def test_add_multiply_expression
       # (1x2)+(3x4)
       expression = Add.new(
         Multiply.new(Number.new(1), Number.new(2)),

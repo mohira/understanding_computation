@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
 class Machine < Struct.new(:statement, :environment)
-  def step
+  def next_step
     self.statement, self.environment = statement.reduce(environment)
   end
 
-  def run
-    puts "👺 #{statement} | #{environment}"
+  def run(debug: false)
+    puts "👺\n#{statement} | #{environment}" if debug
 
     while statement.reducible?
-      step
-      puts "#{statement} | #{environment}"
+      next_step
+
+      puts "#{statement} | #{environment}" if debug
     end
 
     [statement, environment]

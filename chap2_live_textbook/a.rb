@@ -13,14 +13,13 @@ class Number < Struct.new(:value)
     false
   end
 
-  def evaluate(environment)
+  def evaluate(_environment)
     self
   end
 
   def to_ruby
     "-> e { #{value.inspect} }"
   end
-
 end
 
 class Add < Struct.new(:left, :right)
@@ -101,7 +100,7 @@ class Boolean < Struct.new(:value)
     false
   end
 
-  def evaluate(environment)
+  def evaluate(_environment)
     self
   end
 
@@ -166,7 +165,6 @@ class Variable < Struct.new(:name)
   def to_ruby
     "-> e { e[#{name.inspect}] }"
   end
-
 end
 
 class DoNothing
@@ -233,7 +231,6 @@ class Assign < Struct.new(:name, :expression)
     # "-> e { e.merge(#{name.inspect}=> #{expression.inspect})  }" # だめ
     "-> e { e.merge(#{name.inspect} => (#{expression.to_ruby}).call(e)) }" # これでもよさそう
   end
-
 end
 
 class If < Struct.new(:condition, :consequence, :alternative)
@@ -274,12 +271,11 @@ class If < Struct.new(:condition, :consequence, :alternative)
   end
 
   def to_ruby
-    "-> e { if (#{condition.to_ruby}).call(e) " +
-      "then (#{consequence.to_ruby}).call(e)" +
-      "else (#{alternative.to_ruby}).call(e)" +
-      "end }"
+    "-> e { if (#{condition.to_ruby}).call(e) " \
+      "then (#{consequence.to_ruby}).call(e)" \
+      "else (#{alternative.to_ruby}).call(e)" \
+      'end }'
   end
-
 end
 
 class Sequence < Struct.new(:first, :second)
@@ -342,7 +338,7 @@ class While < Struct.new(:condition, :body)
   def evaluate(environment)
     case condition.evaluate(environment)
     when Boolean.new(true)
-      self.evaluate(body.evaluate(environment)) # self. になっている方が、しっくりくるのでこうしてます！ 別ファイルの関数がcallされている気がしちゃうのよ。evaluateだけだとね！
+      evaluate(body.evaluate(environment)) # self. になっている方が、しっくりくるのでこうしてます！ 別ファイルの関数がcallされている気がしちゃうのよ。evaluateだけだとね！
     when Boolean.new(false)
       environment
     end
@@ -353,7 +349,6 @@ class While < Struct.new(:condition, :body)
     # 最後の e は 環境を返している(Statementは環境を返すぞ！)
     "-> e { while (#{condition.to_ruby}).call(e); e = (#{body.to_ruby}).call(e);  end; e}"
   end
-
 end
 
 class Machine < Struct.new(:statement, :environment)
@@ -377,13 +372,13 @@ end
 # while (x < 5) { x = x * 3}
 
 statement =
-    While.new(
-      LessThan.new(Variable.new(:x), Number.new(5)),
-      Assign.new(:x, Multiply.new(Variable.new(:x), Number.new(3)))
-    )
+  While.new(
+    LessThan.new(Variable.new(:x), Number.new(5)),
+    Assign.new(:x, Multiply.new(Variable.new(:x), Number.new(3)))
+  )
 
 p statement
 
 p statement.to_ruby
 
-p eval(statement.to_ruby).call({x:1})
+p eval(statement.to_ruby).call({ x: 1 })
