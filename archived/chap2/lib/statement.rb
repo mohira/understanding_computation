@@ -111,5 +111,4 @@ class While < Struct.new(:condition, :body)
 
     [If.new(condition, consequence, DoNothing.new), environment]
   end
-
 end
