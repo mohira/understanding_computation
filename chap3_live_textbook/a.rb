@@ -44,3 +44,14 @@ class DFA < Struct.new(:current_state, :accept_states, :rulebook)
   end
 end
 
+
+class DFADesign < Struct.new(:start_state, :accept_states, :rulebook)
+  def to_dfa
+    DFA.new(start_state, accept_states, rulebook)
+  end
+
+  def accepts?(string) # <- ing系じゃないね！
+    to_dfa.tap { |dfa| dfa.read_string(string) }.accepting?
+  end
+
+end
