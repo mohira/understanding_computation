@@ -54,4 +54,18 @@ class Chap3Test < Minitest::Test
     assert_equal 3, dfa.current_state
     assert dfa.accepting?
   end
+
+  def test_p69_read_string
+    rules = [
+      FARule.new(1, 'a', 2), FARule.new(1, 'b', 1),
+      FARule.new(2, 'a', 2), FARule.new(2, 'b', 3),
+      FARule.new(3, 'a', 3), FARule.new(3, 'b', 3),
+    ]
+    rulebook = DFARulebook.new(rules)
+    dfa = DFA.new(1, [3], rulebook)
+    refute dfa.accepting?
+
+    dfa.read_string('baaab')
+    assert dfa.accepting?
+  end
 end
