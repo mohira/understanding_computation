@@ -62,6 +62,11 @@ class NFA < Struct.new(:current_states, :accept_states, :rulebook)
       read_character(character)
     end
   end
+
+  # このオーバーライドの違和感！ Rubyっぽいのか？
+  def current_states
+    rulebook.follow_free_moves(super)
+  end
 end
 
 class NFADesign < Struct.new(:start_state, :accept_states, :rulebook)

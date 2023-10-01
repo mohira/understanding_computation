@@ -131,5 +131,33 @@ class NFATest < Minitest::Test
       assert_equal Set[1, 2, 4], rulebook.follow_free_moves(Set[1])
     end
 
+    def test_p79_support_free_moves
+      # 長さが2の倍数 または 3の倍数 の文字列を受理する
+      rules = [
+        # 自由移動は2パターン
+        FARule.new(1, nil, 2), FARule.new(1, nil, 4),
+
+        # 2の倍数の世界
+        FARule.new(2, 'a', 3),
+        FARule.new(3, 'a', 2),
+
+        # 3の倍数の世界
+        FARule.new(4, 'b', 5),
+        FARule.new(5, 'b', 6),
+        FARule.new(6, 'b', 4),
+      ]
+
+      rulebook = NFARuleBook.new(rules)
+      nfa_design = NFADesign.new(1, [2, 4], rulebook)
+
+
+      # 2の倍数は受理
+      assert nfa_design.accepts?('aa')
+      assert nfa_design.accepts?('aaaa')
+
+      # 3の倍数は受理
+      assert nfa_design.accepts?('aaa')
+      assert nfa_design.accepts?('aaaaaa')
+    end
   end
 end
