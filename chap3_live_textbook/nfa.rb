@@ -29,6 +29,22 @@ class NFARuleBook < Struct.new(:rules)
   def rules_for(state, character)
     rules.select { |rule| rule.applies_to?(state, character) }
   end
+
+  def follow_free_moves(states)
+    more_states = next_states(states, nil) # nilです！
+
+    # 技術的に言うと、
+    # これは「自由移動にしたがって状態を追加する」関数の"不動点"を計算しています。
+    if more_states.subset?(states) # 停止の条件
+      states
+    else
+      # 与えられた states の和集合
+      # 与えられた状態 と 自由移動先の状態 が含まれる！
+      # 「自由移動先の状態の集合」**ではない**よ
+      follow_free_moves(states + more_states)
+    end
+  end
+
 end
 
 class NFA < Struct.new(:current_states, :accept_states, :rulebook)
