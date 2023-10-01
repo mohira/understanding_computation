@@ -158,6 +158,10 @@ class NFATest < Minitest::Test
       # 3の倍数は受理
       assert nfa_design.accepts?('aaa')
       assert nfa_design.accepts?('aaaaaa')
+
+      # 受理されない
+      refute nfa_design.accepts?('a')
+      refute nfa_design.accepts?('aaaaa')
     end
   end
 end
