@@ -89,4 +89,27 @@ class NFATest < Minitest::Test
     refute nfa_design.accepts?('aaaaa')
     refute nfa_design.accepts?('abb')
   end
+
+  class FreeMove < Minitest::Test
+    def test_p78_nfa_free_move
+      rules = [
+        # 自由移動は2パターン
+        FARule.new(1, nil, 2), FARule.new(1, nil, 4),
+
+        # 2の倍数の世界
+        FARule.new(2, 'a', 3),
+        FARule.new(3, 'a', 2),
+
+        # 3の倍数の世界
+        FARule.new(4, 'b', 5),
+        FARule.new(5, 'b', 6),
+        FARule.new(6, 'b', 4),
+      ]
+
+      rulebook = NFARuleBook.new(rules)
+
+      assert_equal Set[2, 4], rulebook.next_states(Set[1], nil) # 自由移動するのをシミュレーション
+    end
+
+  end
 end
