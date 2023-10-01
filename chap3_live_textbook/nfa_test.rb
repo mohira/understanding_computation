@@ -101,9 +101,9 @@ class NFATest < Minitest::Test
         FARule.new(3, 'a', 2),
 
         # 3の倍数の世界
-        FARule.new(4, 'b', 5),
-        FARule.new(5, 'b', 6),
-        FARule.new(6, 'b', 4),
+        FARule.new(4, 'a', 5),
+        FARule.new(5, 'a', 6),
+        FARule.new(6, 'a', 4),
       ]
 
       rulebook = NFARuleBook.new(rules)
@@ -121,9 +121,9 @@ class NFATest < Minitest::Test
         FARule.new(3, 'a', 2),
 
         # 3の倍数の世界
-        FARule.new(4, 'b', 5),
-        FARule.new(5, 'b', 6),
-        FARule.new(6, 'b', 4),
+        FARule.new(4, 'a', 5),
+        FARule.new(5, 'a', 6),
+        FARule.new(6, 'a', 4),
       ]
 
       rulebook = NFARuleBook.new(rules)
@@ -142,9 +142,9 @@ class NFATest < Minitest::Test
         FARule.new(3, 'a', 2),
 
         # 3の倍数の世界
-        FARule.new(4, 'b', 5),
-        FARule.new(5, 'b', 6),
-        FARule.new(6, 'b', 4),
+        FARule.new(4, 'a', 5),
+        FARule.new(5, 'a', 6),
+        FARule.new(6, 'a', 4),
       ]
 
       rulebook = NFARuleBook.new(rules)
